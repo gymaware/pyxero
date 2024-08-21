@@ -103,6 +103,7 @@ class BaseManager:
         "ReportingDate",
         "DeliveryDate",
         "ExpectedArrivalDate",
+        "NextScheduledDate",
     )
     BOOLEAN_FIELDS = (
         "IsSupplier",
