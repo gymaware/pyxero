@@ -198,7 +198,7 @@ class BaseManager:
             else:
                 if key in self.BOOLEAN_FIELDS:
                     val = "true" if sub_data else "false"
-                elif key in self.DATE_FIELDS:
+                elif key in self.DATE_FIELDS and hasattr(sub_data, 'strftime'):
                     val = sub_data.strftime("%Y-%m-%dT%H:%M:%S")
                 else:
                     val = str(sub_data)
@@ -442,9 +442,9 @@ class BaseManager:
             def get_filter_value(key, value, value_type=None):
                 if key in self.BOOLEAN_FIELDS or value_type == bool:
                     return "true" if value else "false"
-                elif key in self.DATE_FIELDS or value_type == date:
+                elif (key in self.DATE_FIELDS and hasattr(value, 'year')) or value_type == date:
                     return f"{value.year}-{value.month}-{value.day}"
-                elif key in self.DATETIME_FIELDS or value_type == datetime:
+                elif (key in self.DATETIME_FIELDS and hasattr(value, 'isoformat')) or value_type == datetime:
                     return value.isoformat()
                 elif key.endswith("ID") or value_type == UUID:
                     return "%s" % (
@@ -459,11 +459,11 @@ class BaseManager:
                     return 'Guid("%s")' % str(value)
                 if key in self.BOOLEAN_FIELDS:
                     return "true" if value else "false"
-                elif key in self.DATE_FIELDS:
+                elif key in self.DATE_FIELDS and hasattr(value, 'year'):
                     return "DateTime({},{},{})".format(
                         value.year, value.month, value.day
                     )
-                elif key in self.DATETIME_FIELDS:
+                elif key in self.DATETIME_FIELDS and hasattr(value, 'isoformat'):
                     return value.isoformat()
                 else:
                     return '"%s"' % str(value)
